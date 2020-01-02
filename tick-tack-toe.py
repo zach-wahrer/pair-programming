@@ -69,6 +69,24 @@ class TestBoard(unittest.TestCase):
         ]
         self.assertTrue(board0.game_over())
 
+    def test_o_vertical(self):
+        board0 = Board()
+        board0.board = [
+            ["x", "o", "x"],
+            ["x", "o", "x"],
+            [None, "o", None]
+        ]
+        self.assertTrue(board0.game_over())
+
+    def test_x_diagonal(self):
+        board0 = Board()
+        board0.board = [
+            ["x", "o", "o"],
+            ["x", "x", "o"],
+            [None, "o", "x"]
+        ]
+        self.assertTrue(board0.game_over())
+
     def test_draw_game(self):
         board0 = Board()
         board0.board = [
@@ -77,8 +95,6 @@ class TestBoard(unittest.TestCase):
             ["o", "x", "o"]
         ]
         self.assertTrue(board0.game_over())
-
-    # Add testing for other cases
 
 
 unittest.main()
