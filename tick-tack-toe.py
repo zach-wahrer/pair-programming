@@ -96,5 +96,15 @@ class TestBoard(unittest.TestCase):
         ]
         self.assertTrue(board0.game_over())
 
+    def test_in_progress(self):
+        board0 = Board()
+        board0.board = [
+            ["x", "x", "o"],
+            [None, "x", "o"],
+            [None, None, None],
+        ]
+        self.assertFalse(board0.game_over())
 
-unittest.main()
+
+if __name__ == '__main__':
+    unittest.main()
