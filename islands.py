@@ -32,39 +32,40 @@ board = [
 ]
 
 
-def island_count(board):
+class World:
+    def __init__(self, board):
+        self.board = board
+        self.memoize = set()
+        self.count = 0
+        self._island_count(0, 0)
 
-    def key_gen(row, col):
-        if row in range(0, len(board)) and col in range(0, len(board[0])):
+    def key_gen(self, row, col):
+        if row in range(0, len(self.board)) and col in range(0, len(self.board[0])):
             return (row, col)
         return "stop"
 
-    def _assimilate(row, col):
-        key = key_gen(row, col)
+    def _assimilate(self, row, col):
+        key = self.key_gen(row, col)
         if key == 'stop':
             return
-        if key not in memoize and board[row][col]:
-            memoize[key] = True
-            _assimilate(row + 1, col)
-            _assimilate(row, col + 1)
+        if key not in self.memoize and self.board[row][col]:
+            self.memoize.add(key)
+            self._assimilate(row + 1, col)
+            self._assimilate(row, col + 1)
 
-    memoize = {}
+    def _island_count(self, row, col):
+        if row == len(self.board):
+            return
 
-    def _island_count(row, col, count):
-        if row == len(board):
-            return count
-
-        key = key_gen(row, col)
+        key = self.key_gen(row, col)
         if key == 'stop':
-            return _island_count(row + 1, 0, count)
+            return self._island_count(row + 1, 0)
 
-        if key not in memoize and board[row][col]:
-            count += 1
-            _assimilate(row, col)
+        if key not in self.memoize and self.board[row][col]:
+            self.count += 1
+            self._assimilate(row, col)
 
-        return _island_count(row, col + 1, count)
-
-    return _island_count(0, 0, 0)
+        return self._island_count(row, col + 1)
 
 
-print(island_count(board))
+print(World(board).count)
