@@ -13,13 +13,14 @@ board = [
 ]
 
 
+# Brute Force solution
 def steps_out(board: list) -> int:
 
     def _inbounds(row, col):
-        return row in range(0, len(board)) or col in range(0, len(board[0]))
+        return row in range(0, len(board)) and col in range(0, len(board[0]))
 
-    def _on_right_or_bottom(row, col):
-        return row == len(board) - 1 or col == len(board[0]) - 1
+    def _on_exit(row, col):
+        return row == len(board) - 1 and col == len(board[0]) - 1
 
     possible_paths = []
 
@@ -27,7 +28,7 @@ def steps_out(board: list) -> int:
 
         if _inbounds(row, col):
             if board[row][col] == 0:
-                if _on_right_or_bottom(row, col):
+                if _on_exit(row, col):
                     possible_paths.append(count)
                 else:
                     _traverse_board(row + 1, col, count + 1, possible_paths)
