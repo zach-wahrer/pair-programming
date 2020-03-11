@@ -6,25 +6,24 @@ You can move right or down. Find the shortest path out, if one exists.
 """
 
 board = [
-    [0,   0, 0,  0, -1],
-    [-1, -1, 0,  0, -1],
-    [-1, -1, 0,  0,  0],
-    [-1,  0, -1, 0,  0]
+    [0,  0, 0,  0, -1],
+    [0, -1, 0,  0, -1],
+    [0,  0, 0,  0,  0],
+    [0,  0, 0,  0,  0],
+    [0,  0, 0, -1,  0]
 ]
 
 
 # Brute Force solution
 def steps_out(board: list) -> int:
 
-    log = {}
+    seen = set()
 
-    def _logger(key):
-        if key not in log:
-            log[key] = 0
-            print("New key")
-        else:
-            log[key] += 1
-            print(key, "count", log[key])
+    def _visited(key):
+        if key not in seen:
+            seen.add(key)
+            return False
+        return True
 
     def _inbounds(row, col):
         return row in range(0, len(board)) and col in range(0, len(board[0]))
@@ -33,8 +32,7 @@ def steps_out(board: list) -> int:
         return row == len(board) - 1 and col == len(board[0]) - 1
 
     def _traverse_board(row, col, count):
-        _logger((row, col))
-        if _inbounds(row, col):
+        if _inbounds(row, col) and not _visited((row, col)):
             if board[row][col] == 0:
                 if _on_exit(row, col):
                     return count
