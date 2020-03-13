@@ -20,7 +20,7 @@ def quickest_out(board: list) -> int:
         if board[len(board) - 1][len(board[0]) - 1] == 0:
             return 0
         else:
-            return float('inf')
+            return float('-inf')
 
     def _min_distance(board):
         return len(board) + len(board[0]) - 2
@@ -37,10 +37,7 @@ def quickest_out(board: list) -> int:
     def _traverse_board(row, col):
         key = _get_key(row, col)
 
-        if key == (len(board) - 1, len(board[0]) - 1):
-            steps_to_finish[key] = 0
-
-        elif key not in steps_to_finish:
+        if key not in steps_to_finish:
             right = _traverse_board(row, col + 1)
             down = _traverse_board(row + 1, col)
             steps_to_finish[key] = 1 + max(right, down)
