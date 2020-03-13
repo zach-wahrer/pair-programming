@@ -1,3 +1,5 @@
+import unittest
+
 """
 You can move right or down. Find the shortest path out, if one exists.
 0 0 0 0 0
@@ -14,7 +16,7 @@ board = [
 ]
 
 
-# Brute Force solution
+# Dynamic recurisve solution
 def steps_out(board: list) -> int:
 
     seen = set()
@@ -46,4 +48,28 @@ def steps_out(board: list) -> int:
     return -1 if type(moves) == float else moves
 
 
-print(steps_out(board))
+class TestSteps(unittest.TestCase):
+
+    def test_easy_8(self):
+        board = [
+            [0,  0, 0,  0, -1],
+            [0, -1, 0,  0, -1],
+            [0,  0, 0,  0,  0],
+            [0,  0, 0,  0,  0],
+            [0,  0, 0, -1,  0]
+        ]
+        self.assertEqual(steps_out(board), 8)
+
+    def test_hard_9(self):
+        board = [
+            [0,  0, 0,  0,  0, 0],
+            [0, -1, 0,  0, -1, 0],
+            [0,  0, -1, 0,  0, 0],
+            [0,  0, 0,  0, -1, 0],
+            [0,  0, 0,  0,  0, 0]
+        ]
+        self.assertEqual(steps_out(board), 9)
+
+
+if __name__ == "__main__":
+    unittest.main()
