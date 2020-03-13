@@ -8,59 +8,74 @@ You can move right or down. Find the shortest path out, if one exists.
 """
 
 board = [
-    [0,  0, 0,  0, -1],
-    [0, -1, 0,  0, -1],
-    [0,  0, 0,  0,  0],
-    [0,  0, 0,  0,  0],
-    [0,  0, 0, -1,  0]
+    [0,  0],
+    [-1,  0]
 ]
 
 
 # Dynamic recurisve solution
-def steps_out(board: list) -> int:
+def quickest_out(board: list) -> int:
 
-    seen = set()
+    def _validate_exit(board):
+        if board[len(board) - 1][len(board[0]) - 1] == 0:
+            return 0
+        else:
+            return float('inf')
 
-    def _visited(key):
-        if key not in seen:
-            seen.add(key)
-            return False
-        return True
+    def _min_distance(board):
+        return len(board) + len(board[0]) - 2
 
-    def _inbounds(row, col):
-        return row in range(0, len(board)) and col in range(0, len(board[0]))
-
-    def _on_exit(row, col):
-        return row == len(board) - 1 and col == len(board[0]) - 1
-
-    def _traverse_board(row, col, count):
-        if _inbounds(row, col) and not _visited((row, col)):
+    def _get_key(row, col):
+        if row in range(0, len(board)) and col in range(0, len(board[0])):
             if board[row][col] == 0:
-                if _on_exit(row, col):
-                    return count
+                return(row, col)
+        return 'wall'
 
-                return min(_traverse_board(row + 1, col, count + 1),
-                           _traverse_board(row, col + 1, count + 1))
+    steps_to_finish = {'wall': float('-inf'),
+                       (len(board)-1, len(board[0])-1): _validate_exit(board)}
 
-        return float('inf')
+    def _traverse_board(row, col):
+        key = _get_key(row, col)
 
-    moves = _traverse_board(0, 0, 0)
-    return -1 if type(moves) == float else moves
+        if key == (len(board) - 1, len(board[0]) - 1):
+            steps_to_finish[key] = 0
+
+        elif key not in steps_to_finish:
+            right = _traverse_board(row, col + 1)
+            down = _traverse_board(row + 1, col)
+            steps_to_finish[key] = 1 + max(right, down)
+
+        return steps_to_finish[key]
+
+    farthest_progress = _traverse_board(0, 0)
+    if farthest_progress == _min_distance(board):
+        return farthest_progress
+    return -1
 
 
 class TestSteps(unittest.TestCase):
 
-    def test_easy_8(self):
+    def test_invalid_exit(self):
         board = [
             [0,  0, 0,  0, -1],
             [0, -1, 0,  0, -1],
             [0,  0, 0,  0,  0],
+            [0,  0, 0, -1, 0],
+            [0,  0, 0, -1,  -1]
+        ]
+        self.assertEqual(quickest_out(board), -1)
+
+    def test_invalid_path(self):
+        board = [
+            [0,  0, 0,  0, -1],
+            [0, -1, 0,  0, -1],
             [0,  0, 0,  0,  0],
+            [0,  0, 0, -1, -1],
             [0,  0, 0, -1,  0]
         ]
-        self.assertEqual(steps_out(board), 8)
+        self.assertEqual(quickest_out(board), -1)
 
-    def test_hard_9(self):
+    def test_9_valid(self):
         board = [
             [0,  0, 0,  0,  0, 0],
             [0, -1, 0,  0, -1, 0],
@@ -68,7 +83,7 @@ class TestSteps(unittest.TestCase):
             [0,  0, 0,  0, -1, 0],
             [0,  0, 0,  0,  0, 0]
         ]
-        self.assertEqual(steps_out(board), 9)
+        self.assertEqual(quickest_out(board), 9)
 
 
 if __name__ == "__main__":
