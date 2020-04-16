@@ -3,12 +3,11 @@ import unittest
 
 class regex:
     def string_match(expression: str, string: str) -> bool:
-        if '.' in expression and len(expression) <= len(string):
-            string = [char for char in string]
-            expression = [char for char in expression]
 
-            for index, string_char in enumerate(string):
-                if string_char == expression[0] or expression[0] == '.':
+        if '.' in expression and len(expression) <= len(string):
+
+            for index, char in enumerate(string):
+                if char == expression[0] or expression[0] == '.':
                     e_idx = 1
                     s_idx = index + 1
 
@@ -19,9 +18,6 @@ class regex:
                         s_idx += 1
                     else:
                         return True
-            return False
-
-        elif len(expression) >= len(string):
             return False
 
         else:
